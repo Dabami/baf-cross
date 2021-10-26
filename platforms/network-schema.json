@@ -185,7 +185,7 @@
             "k8s":{ "$ref":"#/definitions/shared_k8s"},
             "vault":{ "$ref":"#/definitions/shared_vault"},
             "gitops":{ "$ref":"#/definitions/shared_gitops"},
-            "cloud_provider":{ "type": "string","enum": ["aws","aws-baremetal", "azure","gcp","minikube"]},
+            "cloud_provider":{ "type": "string","enum": ["aws","aws-baremetal", "azure","gcp","minikube","longhorn"]},
             "gcp":{},
             "azure":{},
             "minikube":{},
