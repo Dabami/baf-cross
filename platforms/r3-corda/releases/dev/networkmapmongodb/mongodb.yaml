@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: mongodb-networkmap
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: operator-a-ns
+spec:
+  replicaCount: 1
+  replicas: 1
+  releaseName: mongodb-networkmap
+  chart:
+    path: platforms/r3-corda/charts/mongodb
+    git: git@github.com:Mike-no/blockchain-automation-framework-1.git
+    ref: operator-a
+  values:
+    nodeName: mongodb-networkmap
+    metadata:
+      namespace: operator-a-ns
+    image:
+      containerName: mongo:3.6.6
+      imagePullSecret: regcred
+      initContainerName: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    storage:
+      memory: 512Mi
+      name: minikubestorageclass
+      mountPath: /data/db
+      volname: hostvol
+    vault:
+      address: http://host.minikube.internal:8200
+      role: vault-role
+      authpath: cordanetworkmap
+      secretprefix: networkmap/data/credentials/mongodb
+      serviceaccountname: vault-auth
+      certsecretprefix: networkmap/data/certs
+    service:
+      tcp:
+          port: 27017
+          targetPort: 27017
+      type: NodePort
+      annotations: {}
+    deployment:
+      annotations: {}
+    pvc:
+      annotations: {}
+    mongodb:
+      username: networkmap
+    cluster:
+      enabled: false
