@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: mongodb-doorman
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: operator-a-ns
+spec:
+  replicaCount: 1
+  replicas: 1
+  releaseName: mongodb-doorman
+  chart:
+    path: platforms/r3-corda/charts/mongodb
+    git: git@github.com:Mike-no/blockchain-automation-framework-1.git
+    ref: operator-a
+  values:
+    nodeName: mongodb-doorman
+    metadata:
+      namespace: operator-a-ns
+    image:
+      containerName: mongo:3.6.6
+      imagePullSecret: regcred
+      initContainerName: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    storage:
+      memory: 512Mi
+      name: longhornstorageclass
+      mountPath: /data/db
+      volname: hostvol
+    vault:
+      address: http://10.30.5.131:8200
+      role: vault-role
+      authpath: cordadoorman
+      secretprefix: doorman/data/credentials/mongodb
+      serviceaccountname: vault-auth
+      certsecretprefix: doorman/data/certs
+    service:
+      tcp:
+          port: 27017
+          targetPort: 27017
+      type: NodePort
+      annotations: {}
+    deployment:
+      annotations: {}
+    pvc:
+      annotations: {}
+    mongodb:
+      username: doorman
+    cluster:
+      enabled: false
