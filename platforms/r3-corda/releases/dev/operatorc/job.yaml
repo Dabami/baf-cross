@@ -1,0 +1,106 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: operatorc-initial-registration
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: operatorc-ns
+spec:
+  releaseName: operatorc-initial-registration
+  chart:
+    path: platforms/r3-corda/charts/node-initial-registration
+    git: git@github.com:Mike-no/blockchain-automation-framework-1.git
+    ref: operator-c
+  values:
+    nodeName: operatorc
+    replicas: 1
+    metadata:
+      namespace: operatorc-ns  
+    image:
+      containerName: index.docker.io/hyperledgerlabs/corda:4.7-linuxkit
+      initContainerName: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+      imagePullSecret: regcred
+      privateCertificate: true
+      doormanCertAlias: 10.30.8.94
+      networkmapCertAlias: 10.30.8.94
+    nodeConf:
+      p2p:
+        url: operatorc.operatorc-ns
+        port: 10002
+      ambassadorAddress: operatorc.test.corda.blockchaincloudpoc.com:15020
+      rpcSettings:
+        useSsl: false
+        standAloneBroker: false
+        address: "0.0.0.0:10003"
+        adminAddress: "0.0.0.0:10005"
+        ssl:
+          certificatesDirectory: na-ssl-false
+          sslKeystorePath: na-ssl-false
+          trustStoreFilePath: na-ssl-false
+      legalName: O=OperatorC,OU=Barcelona,L=41.39/2.15/Barcelona,C=ES #use peer-node level subject for legalName
+      messagingServerAddress:
+      jvmArgs:
+      systemProperties:
+      sshd:
+        port:
+      exportJMXTo:
+      transactionCacheSizeMegaBytes: 8
+      attachmentContentCacheSizeMegaBytes: 10
+      attachmentCacheBound: 1024
+       
+      detectPublicIp: false
+      database:
+        exportHibernateJMXStatistics: false
+      dbUrl: operatorcdb
+      dbPort: 9101
+      dataSourceClassName: "org.h2.jdbcx.JdbcDataSource"
+      dataSourceUrl: "jdbc:h2:tcp://operatorcdb:9101/persistence;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=10000;WRITE_DELAY=100;AUTO_RECONNECT=TRUE;"
+      jarPath: "/data/corda-workspace/h2/bin"
+      networkMapURL: http://10.30.8.94:30040
+      doormanURL: http://10.30.8.94:30030
+      compatibilityZoneURL:
+      jarVersion: 4.7
+      devMode: false
+      env:
+        - name: JAVA_OPTIONS
+          value: -Xmx512m
+        - name: CORDA_HOME
+          value: /opt/corda
+        - name: BASE_DIR
+          value: /base/corda
+    credentials:
+      dataSourceUser: sa
+      rpcUser:
+        - name: operatorcoperations
+          permissions: [ALL]
+
+    volume:
+      baseDir: /base/corda
+    resources:
+      limits: "512Mi"
+      requests: "512Mi"
+    
+    service:
+      type: ClusterIP
+      p2p:
+        port: 10002
+        targetPort: 10002
+      rpc:
+        port: 10003
+      rpcadmin:
+        port: 10005
+
+    vault:
+      address: http://10.30.8.28:8200
+      role: vault-role
+      authpath: cordaoperatorc
+      serviceaccountname: vault-auth
+      dbsecretprefix: operatorc/data/credentials/database
+      rpcusersecretprefix: operatorc/data/credentials/rpcusers
+      tokensecretprefix: operatorc/data/credentials/vaultroottoken
+      keystoresecretprefix: operatorc/data/credentials/keystore
+      certsecretprefix: operatorc/data/certs
+        
+    healthcheck:
+      readinesscheckinterval: 10
+      readinessthreshold: 15
