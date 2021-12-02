@@ -66,4 +66,4 @@ RUN apt-get update && apt-get -y install openvpn
 #path to mount the repo
 VOLUME /home/blockchain-automation-framework/ 
 
-CMD openvpn --config /home/blockchain-automation-framework/build/NXW-PISA-VPN-PRIMARY.ovpn --auth-user-pass /home/blockchain-automation-framework/build/pass.txt --daemon && /home/run.sh
+CMD openvpn --config /home/blockchain-automation-framework/build/5gzorro_nxw_experimenter-1.ovpn --auth-user-pass /home/blockchain-automation-framework/build/pass.txt --daemon && /home/run.sh
