@@ -73,7 +73,7 @@ spec:
       devMode: false
       env:
         - name: JAVA_OPTIONS
-          value: -Xmx512m
+          value: -Xmx1024m
         - name: CORDA_HOME
           value: /opt/corda
         - name: BASE_DIR
@@ -99,8 +99,8 @@ spec:
     volume:
       baseDir: /base/corda
     resources:
-      limits: "1Gi"
-      requests: "1Gi" 
+      limits: "2Gi"
+      requests: "2Gi" 
     pvc:
       name: {{ component_name|e }}-pvc
       annotations: {}

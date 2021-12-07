@@ -68,7 +68,7 @@
       url: "{{ item.uri }}"
       validate_certs: no
     register: this
-    until: this.status == 200 or this.status == 401
+    until: this.status == 200 or this.status == 401 or this.status == 404
     loop: "{{ network['network_services'] }}"
     retries: "{{ network.env.retry_count}}"
     delay: 50
