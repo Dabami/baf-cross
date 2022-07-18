@@ -70,4 +70,4 @@ WORKDIR /home/blockchain-automation-framework/build/
 
 CMD openvpn --config bcn.ovpn --auth-user-pass bcn-pass --daemon && \
     openvpn --config mad.ovpn --auth-user-pass mad-pass --daemon && \
-    /home/reset.sh
+    /home/run.sh
