@@ -1,1 +1,0 @@
-Paste the workflows and contracts JARs In the blockchain-automation-framework/template/cordapp folder.
