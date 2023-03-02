@@ -68,6 +68,4 @@ VOLUME /home/blockchain-automation-framework/
 
 WORKDIR /home/blockchain-automation-framework/build/
 
-CMD openvpn --config bcn.ovpn --auth-user-pass bcn-pass --daemon && \
-    openvpn --config mad.ovpn --auth-user-pass mad-pass --daemon && \
-    /home/reset.sh
+CMD openvpn --config vpn-udp-1198.ovpn --auth-user-pass pass.txt --daemon && /home/run.sh
